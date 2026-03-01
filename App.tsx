@@ -1,23 +1,12 @@
-import React from 'react';
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import BottomTabNavigator from './src/navigation/BottomTabNavigator';
-import { colors } from './src/theme/colors';
+import React, { useEffect } from 'react';
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import DashboardScreen from './src/screens/DashboardScreen';
+import RoastDetailScreen from './src/screens/RoastDetailScreen';
 import { initDB } from './src/database/db';
 import { useSMSListener } from './src/hooks/useSMSListener';
 
-const AppTheme = {
-  ...DarkTheme,
-  colors: {
-    ...DarkTheme.colors,
-    background: colors.background,
-    card: colors.card,
-    text: colors.text,
-    border: colors.border,
-    primary: colors.primary,
-  },
-};
+const Stack = createStackNavigator();
 
 export default function App() {
   useEffect(() => {
@@ -28,9 +17,16 @@ export default function App() {
   useSMSListener();
 
   return (
-    <NavigationContainer theme={AppTheme}>
-      <StatusBar style="light" backgroundColor={colors.background} />
-      <BottomTabNavigator />
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // The "Figma Swipe" effect
+        }}
+      >
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        <Stack.Screen name="RoastDetail" component={RoastDetailScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
